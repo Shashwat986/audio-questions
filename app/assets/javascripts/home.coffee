@@ -5,28 +5,43 @@
 # request permission to access audio stream
 window.home ||= {}
 
-createAudioElement = (blobUrl) ->
-  downloadEl = document.createElement('a')
+createAudioElement = (blob) ->
+  blobUrl = URL.createObjectURL(blob)
+
+  #downloadEl = document.createElement('a')
   downloadEl.style = 'display: block'
   downloadEl.innerHTML = 'download'
   downloadEl.download = 'audio.webm'
   downloadEl.href = blobUrl
-  audioEl = document.createElement('audio')
+
+  #audioEl = document.createElement('audio')
+  audioEl.style = 'display: block'
   audioEl.controls = true
+  audioEl.innerHTML = ""
   sourceEl = document.createElement('source')
   sourceEl.src = blobUrl
   sourceEl.type = 'audio/webm'
   audioEl.appendChild sourceEl
-  recordingsList.appendChild audioEl
-  recordingsList.appendChild downloadEl
+
+  uploadEl.style = 'display: block'
+  uploadEl.onclick = (e) ->
+    formData = new FormData()
+
+    formData.append('file', blob)
+
+    Rails.ajax(
+      url: '/home'
+      type: "POST"
+      data: formData
+    )
 
 window.home.startRecording = () ->
   navigator.mediaDevices.getUserMedia(audio: true).then((stream) ->
     # store streaming data chunks in array
     chunks = []
     # create media recorder instance to initialize recording
-    window.recorder = new MediaRecorder(stream)
-    recorder = window.recorder
+    window.home.recorder = new MediaRecorder(stream)
+    recorder = window.home.recorder
     # function to be called when data is received
 
     recorder.onstart = (e) ->
@@ -40,7 +55,7 @@ window.home.startRecording = () ->
         # convert stream data chunks to a 'webm' audio format as a blob
         blob = new Blob(chunks, type: 'audio/webm')
         # convert blob to URL so it can be assigned to a audio src attribute
-        createAudioElement URL.createObjectURL(blob)
+        createAudioElement blob
       return
 
     # start recording with 1 second time between receiving 'ondataavailable' events
@@ -48,4 +63,5 @@ window.home.startRecording = () ->
   ).catch(console.error)
 
 window.home.stopRecording = () ->
-  window.recorder.stop()
+  window.home.recorder.stop()
+  recordingStatus.innerHTML = "Recording done"
