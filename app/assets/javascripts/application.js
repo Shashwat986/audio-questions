@@ -12,4 +12,6 @@
 //
 //= require rails-ujs
 //= require turbolinks
-//= require_tree .
+//= require cable.js
+//= require_tree ./channels
+//= require recorderjs/recorder.min.js
