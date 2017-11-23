@@ -3,7 +3,7 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 # request permission to access audio stream
-window.home ||= {}
+window.audio ||= {}
 
 createAudioElement = (blob) ->
   blobUrl = URL.createObjectURL(blob)
@@ -29,19 +29,25 @@ createAudioElement = (blob) ->
 
     formData.append('file', blob)
 
-    Rails.ajax(
-      url: '/home'
+    Rails.ajax
+      url: uploadEl.dataset.posturl
       type: "POST"
       data: formData
-    )
+      success: (data) ->
+        if data.status? and data.status
+          Turbolinks.visit(uploadEl.dataset.nexturl)
+        else
+          alert 'There was an error uploading the file. Please try again'
+      error: () ->
+        alert 'There was an error uploading the file. Please try again'
 
-window.home.startRecording = () ->
+window.audio.startRecording = () ->
   navigator.mediaDevices.getUserMedia(audio: true).then((stream) ->
     # store streaming data chunks in array
     chunks = []
     # create media recorder instance to initialize recording
-    window.home.recorder = new MediaRecorder(stream)
-    recorder = window.home.recorder
+    window.audio.recorder = new MediaRecorder(stream)
+    recorder = window.audio.recorder
     # function to be called when data is received
 
     recorder.onstart = (e) ->
@@ -62,6 +68,6 @@ window.home.startRecording = () ->
     recorder.start 1000
   ).catch(console.error)
 
-window.home.stopRecording = () ->
-  window.home.recorder.stop()
+window.audio.stopRecording = () ->
+  window.audio.recorder.stop()
   recordingStatus.innerHTML = "Recording done"

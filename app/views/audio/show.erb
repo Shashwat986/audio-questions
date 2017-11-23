@@ -1,0 +1,13 @@
+<div id="recordingStatus"></div>
+<div>
+  Question <%= @id %>
+</div>
+<div>
+  <input onclick="audio.startRecording()" type="button" value="start recording" />
+  <input onclick="audio.stopRecording()" type="button" value="stop recording and play" />
+</div>
+<div>
+  <a href="#" id="downloadEl" style="display: none">download</a>
+  <audio controls style="display: none" id="audioEl"></audio>
+  <button id="uploadEl" style="display: none" data-posturl="<%= audio_index_path %>" data-nexturl="<%= audio_path(@id + 1) %>">upload</button>
+</div>
