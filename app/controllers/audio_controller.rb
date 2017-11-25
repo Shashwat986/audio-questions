@@ -8,6 +8,10 @@ class AudioController < ApplicationController
     @id = params[:id].to_i || 1
   end
 
+  def question_audio
+    send_data File.binread('public/uploads/test.webm'), type: 'audio/webm'
+  end
+
   def create
     file = params[:file]
     filetype =

@@ -1,6 +1,9 @@
 <div id="recordingStatus"></div>
 <div>
   Question <%= @id %>
+  <audio controls>
+    <source src="<%= question_audio_audio_path(@id) %>"></source>
+  </audio>
 </div>
 <div>
   <input onclick="audio.startRecording()" type="button" value="start recording" />

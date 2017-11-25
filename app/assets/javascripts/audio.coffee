@@ -44,7 +44,7 @@ createAudioElement = (blob) ->
 window.audio.startRecording = () ->
   navigator.mediaDevices.getUserMedia(audio: true).then((stream) ->
     # store streaming data chunks in array
-    chunks = []
+    window.audio.chunks = []
     # create media recorder instance to initialize recording
     window.audio.recorder = new MediaRecorder(stream)
     recorder = window.audio.recorder
@@ -55,11 +55,11 @@ window.audio.startRecording = () ->
 
     recorder.ondataavailable = (e) ->
       # add stream data to chunks
-      chunks.push e.data
+      window.audio.chunks.push e.data
       # if recorder is 'inactive' then recording has finished
       if recorder.state == 'inactive'
         # convert stream data chunks to a 'webm' audio format as a blob
-        blob = new Blob(chunks, type: 'audio/webm')
+        blob = new Blob(window.audio.chunks, type: 'audio/webm')
         # convert blob to URL so it can be assigned to a audio src attribute
         createAudioElement blob
       return
