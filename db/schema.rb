@@ -10,15 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171202081634) do
+ActiveRecord::Schema.define(version: 20171202130744) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "answers", force: :cascade do |t|
+    t.binary "recording"
+    t.integer "user_id"
+    t.integer "attempt_id"
+    t.integer "question_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["attempt_id"], name: "index_answers_on_attempt_id"
+    t.index ["user_id"], name: "index_answers_on_user_id"
+  end
+
+  create_table "attempts", force: :cascade do |t|
+    t.boolean "active"
+    t.integer "user_id"
+    t.string "question_ids"
+    t.integer "attempt_count"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_attempts_on_active"
+    t.index ["user_id"], name: "index_attempts_on_user_id"
+  end
+
   create_table "questions", force: :cascade do |t|
     t.text "text"
     t.string "mime_type"
-    t.text "recording"
+    t.binary "recording"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
