@@ -15,12 +15,33 @@
   </head>
 
   <body>
-    <% if flash[:notice] %>
-      <div class="notification is-info"><%= flash[:notice] %></div>
-    <% end %>
-    <% if flash[:alert] %>
-      <div class="notification is-warning"><%= flash[:alert] %></div>
-    <% end %>
+
+    <nav class="navbar is-success" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="<%= root_path %>">
+          <strong>Gurukul</strong>
+        </a>
+        <% if flash[:alert] %>
+          <div class="navbar-item is-warning"><%= flash[:alert] %></div>
+        <% elsif flash[:notice] %>
+          <div class="navbar-item is-info"><%= flash[:notice] %></div>
+        <% end %>
+        <% if user_signed_in? %>
+          <span class="navbar-item">
+            <a class="button is-danger" href="<%= destroy_user_session_path %>">
+              Sign out
+            </a>
+          </span>
+        <% else %>
+          <span class="navbar-item">
+            <a class="button is-outlined" href="<%= new_user_session_path %>">
+              Sign in
+            </a>
+          </span>
+        <% end %>
+      </div>
+    </nav>
+
     <%= yield %>
   </body>
 </html>

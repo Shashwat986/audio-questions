@@ -29,6 +29,8 @@ class AudioController < ApplicationController
       f.write(file.read)
     end
 
+    flash[:notice] = "Submission successful"
+
     render json: {
       status: true
     }
