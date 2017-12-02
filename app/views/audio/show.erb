@@ -1,16 +1,22 @@
-<div id="recordingStatus"></div>
-<div>
-  Question <%= @id %>
+<section class="section">
+<div class="box">
+  <h4 class="subtitle">
+    Question <%= @id %>
+  </h4>
   <audio controls>
     <source src="<%= question_audio_audio_path(@id) %>"></source>
   </audio>
 </div>
-<div>
-  <input onclick="audio.startRecording()" type="button" value="start recording" />
-  <input onclick="audio.stopRecording()" type="button" value="stop recording and play" />
+<div class="container">
+  <input id="startRecordingEl" class="button is-link" onclick="audio.startRecording()" type="button" value="start recording" />
+  <input id="stopRecordingEl" class="button is-warning is-hidden" onclick="audio.stopRecording()" type="button" value="stop recording" />
+  <span id="recordingStatus"></span>
 </div>
-<div>
-  <a href="#" id="downloadEl" style="display: none">download</a>
-  <audio controls style="display: none" id="audioEl"></audio>
-  <button id="uploadEl" style="display: none" data-posturl="<%= audio_index_path %>" data-nexturl="<%= audio_path(@id + 1) %>">upload</button>
+</section>
+<section class="section">
+<div class="container is-hidden" id="submitContainerEl">
+  <a href="#" id="downloadEl" class="button is-link" style="display: none !important">download</a>
+  <audio controls id="audioEl"></audio>
+  <button id="uploadEl" class="button is-success" data-posturl="<%= audio_index_path %>" data-nexturl="<%= audio_path(@id + 1) %>">submit</button>
 </div>
+</section>

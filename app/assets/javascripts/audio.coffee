@@ -7,23 +7,20 @@ window.audio ||= {}
 
 createAudioElement = (blob) ->
   blobUrl = URL.createObjectURL(blob)
+  submitContainerEl.classList.remove('is-hidden')
 
-  #downloadEl = document.createElement('a')
-  downloadEl.style = 'display: block'
   downloadEl.innerHTML = 'download'
   downloadEl.download = 'audio.webm'
   downloadEl.href = blobUrl
 
-  #audioEl = document.createElement('audio')
-  audioEl.style = 'display: block'
   audioEl.controls = true
   audioEl.innerHTML = ""
   sourceEl = document.createElement('source')
   sourceEl.src = blobUrl
   sourceEl.type = 'audio/webm'
   audioEl.appendChild sourceEl
+  audioEl.load()
 
-  uploadEl.style = 'display: block'
   uploadEl.onclick = (e) ->
     formData = new FormData()
 
@@ -53,6 +50,10 @@ window.audio.startRecording = () ->
     recorder.onstart = (e) ->
       recordingStatus.innerHTML = "Recording"
 
+      startRecordingEl.classList.add('is-hidden')
+      stopRecordingEl.classList.remove('is-hidden')
+      submitContainerEl.classList.add('is-hidden')
+
     recorder.ondataavailable = (e) ->
       # add stream data to chunks
       window.audio.chunks.push e.data
@@ -70,4 +71,6 @@ window.audio.startRecording = () ->
 
 window.audio.stopRecording = () ->
   window.audio.recorder.stop()
-  recordingStatus.innerHTML = "Recording done"
+  recordingStatus.innerHTML = ""
+  startRecordingEl.classList.remove('is-hidden')
+  stopRecordingEl.classList.add('is-hidden')
