@@ -1,4 +1,6 @@
 class AudioController < ApplicationController
+  before_action :require_login
+
   def index
     @id = 0
     render "show"

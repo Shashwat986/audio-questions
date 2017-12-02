@@ -8,10 +8,19 @@
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag params[:controller] %>
+    <% begin %>
+      <%= javascript_include_tag params[:controller] %>
+    <% rescue Sprockets::Rails::Helper::AssetNotFound %>
+    <% end %>
   </head>
 
   <body>
+    <% if flash[:notice] %>
+      <div class="notification is-info"><%= flash[:notice] %></div>
+    <% end %>
+    <% if flash[:alert] %>
+      <div class="notification is-warning"><%= flash[:alert] %></div>
+    <% end %>
     <%= yield %>
   </body>
 </html>
