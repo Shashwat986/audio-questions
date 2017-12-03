@@ -10,7 +10,7 @@ createAudioElement = (blob) ->
   submitContainerEl.classList.remove('is-hidden')
 
   uploadEl.disabled = false
-  uploadEl.innerHTML = "submit"
+  uploadEl.innerHTML = "Submit Recording"
   window.audio.submitted = false
 
   audioEl.controls = true
@@ -45,12 +45,13 @@ createAudioElement = (blob) ->
 window.audio.navigationGuard = (e) ->
   if window.audio.submitted? && window.audio.submitted == false
     reply = confirm("You have not submitted your audio file. Are you sure you want to leave?")
-    if !reply
+    if reply
+      window.audio.submitted = undefined
+    else
       e.preventDefault()
       return
 
   Turbolinks.visit(e.currentTarget.dataset.href)
-
 
 window.audio.startRecording = () ->
   navigator.mediaDevices.getUserMedia(audio: true).then((stream) ->
@@ -63,7 +64,7 @@ window.audio.startRecording = () ->
 
     recorder.onstart = (e) ->
       window.audio.submitted = false
-      recordingStatus.innerHTML = "Recording"
+      recordingStatus.classList.remove('is-hidden')
 
       startRecordingEl.classList.add('is-hidden')
       stopRecordingEl.classList.remove('is-hidden')
@@ -86,6 +87,9 @@ window.audio.startRecording = () ->
 
 window.audio.stopRecording = () ->
   window.audio.recorder.stop()
-  recordingStatus.innerHTML = ""
+  recordingStatus.classList.add('is-hidden')
   startRecordingEl.classList.remove('is-hidden')
   stopRecordingEl.classList.add('is-hidden')
+
+window.audio.resultOnLoad = () ->
+  codeEl.innerHTML = window.location

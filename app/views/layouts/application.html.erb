@@ -21,11 +21,6 @@
         <a class="navbar-item" href="<%= root_path %>">
           <strong>Gurukul</strong>
         </a>
-        <% if flash[:alert] %>
-          <div class="navbar-item is-warning"><%= flash[:alert] %></div>
-        <% elsif flash[:notice] %>
-          <div class="navbar-item is-info"><%= flash[:notice] %></div>
-        <% end %>
         <% if user_signed_in? %>
           <span class="navbar-item">
             <a class="button is-danger" href="<%= destroy_user_session_path %>">
@@ -41,6 +36,16 @@
         <% end %>
       </div>
     </nav>
+
+    <% if flash[:alert] %>
+      <article class="message is-warning">
+        <div class="message-header"><%= flash[:alert] %></div>
+      </article>
+    <% elsif flash[:notice] %>
+      <article class="message is-info">
+        <div class="message-header"><%= flash[:notice] %></div>
+      </article>
+    <% end %>
 
     <%= yield %>
   </body>

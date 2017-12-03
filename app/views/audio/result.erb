@@ -1,16 +1,52 @@
 <section class="section">
-<% @attempt.results.each_with_index do |ar, idx| %>
-  <% ques, ans = ar %>
-  <div class="box">
-    <h2 class="subtitle">Question <%= idx + 1 %></h2>
-    <audio controls>
-      <source src="<%= question_file_path(ques.id) %>"></source>
-    </audio>
-    <% if ans.present? %>
-      <h2 class="subtitle">Your Answer</h2>
-      <audio controls>
-        <source src="<%= answer_file_path(ans.id) %>"></source>
-      </audio>
-    <% end %>
+  <div class="columns is-centered">
+    <div class="column is-half-desktop">
+      <article class="message is-half-desktop">
+        <div class="message-header">
+          <p><%= @attempt.user.username %>'s submission</p>
+        </div>
+        <div class="message-body content">
+          Use this link to share the result:
+          <br/>
+          <code id="codeEl">
+          </code>
+          <% if !@all_attempted %>
+          <br/>
+          <br/>
+          <strong>Note:</strong> This user has not submitted solutions for all questions
+          <% end %>
+        </div>
+      </article>
+    </div>
   </div>
-<% end %>
+  <% @attempt.results.each_with_index do |ar, idx| %>
+    <% ques, ans = ar %>
+    <div class="columns is-centered">
+      <div class="column is-half-desktop">
+        <div class="box">
+          <div class="columns has-text-centered is-centered">
+            <h2 class="column subtitle">Question <%= idx + 1 %></h2>
+          </div>
+          <div class="columns has-text-centered is-centered">
+            <div class="column">
+              <audio controls>
+                <source src="<%= question_file_path(ques.id) %>"></source>
+              </audio>
+            </div>
+          </div>
+          <% if ans.present? %>
+          <div class="columns has-text-centered is-centered">
+            <h2 class="subtitle">Your Answer</h2>
+            <audio controls>
+              <source src="<%= answer_file_path(ans.id) %>"></source>
+            </audio>
+          </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</section>
+<script type="text/javascript">
+  window.audio.resultOnLoad();
+</script>

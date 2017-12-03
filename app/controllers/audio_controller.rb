@@ -45,6 +45,8 @@ class AudioController < ApplicationController
 
   def result
     @attempt = Attempt.find_by_hash params[:id]
+    @all_attempted = (@attempt.attempt_count == Attempt::MAX)
+
     head 404 if @attempt.nil?
   end
 
