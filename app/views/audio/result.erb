@@ -2,7 +2,7 @@
 <% @attempt.results.each_with_index do |ar, idx| %>
   <% ques, ans = ar %>
   <div class="box">
-    <h2 class="subtitle">Question <%= idx %></h2>
+    <h2 class="subtitle">Question <%= idx + 1 %></h2>
     <audio controls>
       <source src="<%= question_file_path(ques.id) %>"></source>
     </audio>
