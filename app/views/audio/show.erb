@@ -7,21 +7,44 @@
     <source src="<%= question_file_path(@question_id) %>"></source>
   </audio>
 </div>
-<div class="container">
+<div class="pBT">
   <input id="startRecordingEl" class="button is-link" onclick="audio.startRecording()" type="button" value="start recording" />
   <input id="stopRecordingEl" class="button is-warning is-hidden" onclick="audio.stopRecording()" type="button" value="stop recording" />
   <span id="recordingStatus"></span>
 </div>
-</section>
-<section class="section">
-<div class="container is-hidden" id="submitContainerEl">
-  <a href="#" id="downloadEl" class="button is-link" style="display: none !important">download</a>
-  <audio controls id="audioEl"></audio>
-  <button id="uploadEl" class="button is-success" data-posturl="<%= answer_audio_path(@id) %>" data-nexturl="<%= audio_path(@id + 1) %>">submit</button>
-</div>
-<% if @all_attempted %>
+<div class="box<%= @answer.nil? ? " is-hidden" : "" %>" id="submitContainerEl">
   <div class="container">
-    <a class="button is-primary" href="<%= end_audio_index_path %>">submit</a>
+    <h4 class="subtitle">Current Recording</h4>
+    <audio controls id="audioEl">
+      <% if @answer.present? %>
+        <source src="<%= answer_file_path(@answer.id) %>"></source>
+      <% end %>
+    </audio>
+    <button id="uploadEl"
+            class="button is-success"
+            <%= @answer.nil? ? "" : "disabled" %>
+            data-posturl="<%= answer_audio_path(@id) %>"
+            data-nexturl="<%= audio_path(@id + 1) %>"
+    >
+      <%= @answer.nil? ? "submit" : "submitted" %>
+    </button>
   </div>
-<% end %>
+</div>
+<div class="pBT">
+  <% if @all_attempted %>
+    <a class="button is-primary" href="<%= end_audio_index_path %>">submit</a>
+  <% end %>
+
+  <a class="button is-info is-outlined"
+     onclick="audio.navigationGuard(event)"
+     data-href="<%= audio_path(@id - 1) %>"
+     <% if @id == 1 %>disabled<% end %>
+  >Previous</a>
+
+  <a class="button is-info is-outlined"
+     onclick="audio.navigationGuard(event)"
+     data-href="<%= audio_path(@id + 1) %>"
+     <% if @id == @attempt.question_count %>disabled<% end %>
+  >Next</a>
+</div>
 </section>

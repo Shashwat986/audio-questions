@@ -9,9 +9,9 @@ createAudioElement = (blob) ->
   blobUrl = URL.createObjectURL(blob)
   submitContainerEl.classList.remove('is-hidden')
 
-  downloadEl.innerHTML = 'download'
-  downloadEl.download = 'audio.webm'
-  downloadEl.href = blobUrl
+  uploadEl.disabled = false
+  uploadEl.innerHTML = "submit"
+  window.audio.submitted = false
 
   audioEl.controls = true
   audioEl.innerHTML = ""
@@ -26,17 +26,31 @@ createAudioElement = (blob) ->
 
     formData.append('file', blob)
 
+    uploadEl.classList.add('is-loading')
     Rails.ajax
       url: uploadEl.dataset.posturl
       type: "POST"
       data: formData
       success: (data) ->
+        window.audio.submitted = true
+        uploadEl.classList.remove('is-loading')
         if data.status? and data.status
           Turbolinks.visit(uploadEl.dataset.nexturl)
         else
           alert 'There was an error uploading the file. Please try again'
       error: () ->
+        uploadEl.classList.remove('is-loading')
         alert 'There was an error uploading the file. Please try again'
+
+window.audio.navigationGuard = (e) ->
+  if window.audio.submitted? && window.audio.submitted == false
+    reply = confirm("You have not submitted your audio file. Are you sure you want to leave?")
+    if !reply
+      e.preventDefault()
+      return
+
+  Turbolinks.visit(e.currentTarget.dataset.href)
+
 
 window.audio.startRecording = () ->
   navigator.mediaDevices.getUserMedia(audio: true).then((stream) ->
@@ -48,6 +62,7 @@ window.audio.startRecording = () ->
     # function to be called when data is received
 
     recorder.onstart = (e) ->
+      window.audio.submitted = false
       recordingStatus.innerHTML = "Recording"
 
       startRecordingEl.classList.add('is-hidden')

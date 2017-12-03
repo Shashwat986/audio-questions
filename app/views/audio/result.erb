@@ -1,11 +1,13 @@
 <section class="section">
-<% @attempt.results.each do |ques, ans| %>
+<% @attempt.results.each_with_index do |ar, idx| %>
+  <% ques, ans = ar %>
   <div class="box">
+    <h2 class="subtitle">Question <%= idx %></h2>
     <audio controls>
       <source src="<%= question_file_path(ques.id) %>"></source>
     </audio>
-    <%= ans.to_s  + "asdfasdfsad " %>
     <% if ans.present? %>
+      <h2 class="subtitle">Your Answer</h2>
       <audio controls>
         <source src="<%= answer_file_path(ans.id) %>"></source>
       </audio>

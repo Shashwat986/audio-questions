@@ -61,7 +61,7 @@ class AudioController < ApplicationController
 
     if params[:id] && params[:id].to_i > @attempt.question_count
       # TODO: Change MAX to last attempted
-      redirect_to action: "show", id: Attempt::MAX
+      redirect_to action: "show", id: @attempt.question_count
       return
     end
     # TODO: Change 1 to last attempted
