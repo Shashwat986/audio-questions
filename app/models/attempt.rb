@@ -31,15 +31,13 @@ class Attempt < ApplicationRecord
     self.save
   end
 
-  # TODO: Add salt
   def get_hash
-    hashids = Hashids.new
+    hashids = Hashids.new(Rails.configuration.hashids['hashids'], 6)
     hashids.encode(self.id)
   end
 
-  # TODO: Add salt
   def self.find_by_hash hash
-    hashids = Hashids.new
+    hashids = Hashids.new(Rails.configuration.hashids['hashids'], 6)
     a_id = hashids.decode(hash)[0]
     return nil if a_id.nil?
 

@@ -1,0 +1,8 @@
+development:
+  hashids: 00d00bf9-1dbf-4e11-bba9-e55010adffd1
+
+test:
+  hashids: f19a1207-702a-42b7-b66e-32c09f1a82b4
+
+production:
+  hashids: <%= ENV['HASHIDS_KEY'] %>
