@@ -1,38 +1,70 @@
 class AudioController < ApplicationController
-  before_action :require_login
+  before_action :require_login, :get_attempt, except: [:result]
 
   def index
-    @id = 0
-    render "show"
+    redirect_to action: "show", id: @id
   end
 
   def show
-    @id = params[:id].to_i || 1
+    question = @attempt.active_question(@id)
+    @question_id = question.id
+    @answer = Answer.find_by_auq(@attempt.id, current_user.id, question.id)
+
+    @all_attempted = (@attempt.attempt_count == Attempt::MAX)
   end
 
-  def question_audio
-    send_data File.binread('public/uploads/test.webm'), type: 'audio/webm'
-  end
-
-  def create
+  def answer
     file = params[:file]
-    filetype =
-      case file.content_type
-      when 'audio/webm'
-        '.webm'
-      when 'audio/ogg'
-        '.ogg'
-      else
-        '.' + file.content_type.split('/')[-1]
-      end
-    File.open(Rails.root.join('public', 'uploads', file.original_filename + filetype), 'wb') do |f|
-      f.write(file.read)
+    answer = Answer.where(
+      attempt_id: @attempt.id,
+      user_id: current_user.id,
+      question_id: @attempt.active_question(@id).id,
+    ).first_or_create do
+      # Only executes if answer was created
+      @attempt.attempt_count += 1
+      @attempt.save
     end
+
+    answer.update(
+      recording: file.read,
+      mime_type: file.content_type
+    )
+
 
     flash[:notice] = "Submission successful"
 
     render json: {
       status: true
     }
+  end
+
+  def end
+    @attempt.set_inactive
+    redirect_to action: 'result', id: @attempt.get_hash
+  end
+
+  def result
+    @attempt = Attempt.find_by_hash params[:id]
+    head 404 if @attempt.nil?
+  end
+
+  private
+
+  def get_attempt
+    @attempt = current_user.active_attempt
+
+    if @attempt.nil?
+      @attempt = current_user.attempts.create({
+        active: true
+      })
+    end
+
+    if params[:id] && params[:id].to_i > @attempt.question_count
+      # TODO: Change MAX to last attempted
+      redirect_to action: "show", id: Attempt::MAX
+      return
+    end
+    # TODO: Change 1 to last attempted
+    @id = (params[:id] || 1).to_i
   end
 end

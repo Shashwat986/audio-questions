@@ -4,7 +4,17 @@ Rails.application.routes.draw do
   root 'audio#index'
   resources :audio do
     member do
-      get :question_audio
+      get :question_audio, :result
+      post :answer
+    end
+    collection do
+      get :end
+    end
+  end
+
+  resources :files do
+    member do
+      get :question, :answer
     end
   end
 end

@@ -14,4 +14,10 @@ class User < ApplicationRecord
   def email_changed?
     false
   end
+
+  has_many :attempts
+
+  def active_attempt
+    self.attempts.where(active: true).first
+  end
 end

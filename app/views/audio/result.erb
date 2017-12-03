@@ -1,0 +1,14 @@
+<section class="section">
+<% @attempt.results.each do |ques, ans| %>
+  <div class="box">
+    <audio controls>
+      <source src="<%= question_file_path(ques.id) %>"></source>
+    </audio>
+    <%= ans.to_s  + "asdfasdfsad " %>
+    <% if ans.present? %>
+      <audio controls>
+        <source src="<%= answer_file_path(ans.id) %>"></source>
+      </audio>
+    <% end %>
+  </div>
+<% end %>

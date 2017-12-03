@@ -4,7 +4,7 @@
     Question <%= @id %>
   </h4>
   <audio controls>
-    <source src="<%= question_audio_audio_path(@id) %>"></source>
+    <source src="<%= question_file_path(@question_id) %>"></source>
   </audio>
 </div>
 <div class="container">
@@ -17,6 +17,11 @@
 <div class="container is-hidden" id="submitContainerEl">
   <a href="#" id="downloadEl" class="button is-link" style="display: none !important">download</a>
   <audio controls id="audioEl"></audio>
-  <button id="uploadEl" class="button is-success" data-posturl="<%= audio_index_path %>" data-nexturl="<%= audio_path(@id + 1) %>">submit</button>
+  <button id="uploadEl" class="button is-success" data-posturl="<%= answer_audio_path(@id) %>" data-nexturl="<%= audio_path(@id + 1) %>">submit</button>
 </div>
+<% if @all_attempted %>
+  <div class="container">
+    <a class="button is-primary" href="<%= end_audio_index_path %>">submit</a>
+  </div>
+<% end %>
 </section>
